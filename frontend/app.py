@@ -1,3 +1,4 @@
+import os
 
 import streamlit as st
 import requests
@@ -7,7 +8,7 @@ import requests
 # Configuration
 # ---------------------------------------------------------
 
-BACKEND_URL = "http://localhost:7860"
+BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:7860").rstrip("/")
 
 
 # ---------------------------------------------------------
@@ -70,7 +71,7 @@ st.write("Ask a question about Aurora Stays policies.")
 
 response_type = st.radio(
     "Response mode",
-    ["Answer only", "Answer + Relevant Chunks"],
+    ["Answer + Relevant Chunks", "Answer only"],
     horizontal=True
 )
 
@@ -81,7 +82,7 @@ response_type = st.radio(
 
 query = st.text_input(
     "Your question",
-    placeholder="e.g., What is the waiting period for hospitalization?"
+    placeholder="e.g., What is the parking fee at the Boston property?"
 )
 
 
@@ -114,7 +115,8 @@ if st.button("Submit", type="primary"):
             with st.spinner("Thinking…"):
                 response = requests.post(
                     f"{BACKEND_URL}{endpoint}",
-                    json=payload
+                    json=payload,
+                    timeout=120
                 )
 
             if response.status_code == 200:

@@ -48,8 +48,6 @@ def generate(query, retrieved_chunks,model) -> str:
     Answer:
     """
 
-    Answer:
-    """
 
     return model.invoke(prompt)
 
